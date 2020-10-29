@@ -152,7 +152,11 @@ double Render3DLayer::render() {
 		SolidTri& projected_tri = projected_solid_tris[i];
 		SolidTri& original_tri = passed_solid_tris[i];
 
-		debug_text =
+#ifdef DEBUG_TEXT
+		debug_text = 
+			"XYZ: " + std::to_string(this->position.x) + ", " + std::to_string(this->position.y) + ", " + std::to_string(this->position.z) + '\n' +
+			"YPR: " + std::to_string(this->rotation.x) + ", " + std::to_string(this->rotation.y) + ", " + std::to_string(this->rotation.z) + '\n' +
+
 			"ABC A... X:" + std::to_string(projected_tri.a.x) +
 			" Y:" + std::to_string(projected_tri.a.y) +
 			" Z:" + std::to_string(projected_tri.a.z) + '\n' +
@@ -164,6 +168,7 @@ double Render3DLayer::render() {
 			"ABC C... X:" + std::to_string(projected_tri.c.x) +
 			" Y:" + std::to_string(projected_tri.c.y) +
 			" Z:" + std::to_string(projected_tri.c.z) + '\n';
+#endif
 
 		// Get the highest and lowest Y line in the triangle
 		I64 top_line = projected_tri.a.y;
@@ -177,9 +182,11 @@ double Render3DLayer::render() {
 		if (projected_tri.b.y > bottom_line)
 			bottom_line = projected_tri.b.y;
 
+#ifdef DEBUG_TEXT
 		debug_text +=
 			"bottom_line: " + std::to_string(bottom_line) + '\n' +
 			"top_line: " + std::to_string(top_line) + "\n\n";
+#endif
 
 		// Iterate in the range of the lines
 		for (I64 line = top_line; line < bottom_line; line++) {
@@ -238,14 +245,18 @@ double Render3DLayer::render() {
 			double depth_steps = az - step;
 			U32 line_dry = line * this->width;
 
+#ifdef DEBUG_TEXT
 			debug_text +=
 				"line: " + std::to_string(line) + '\n' +
 				"ax: " + std::to_string(ax) + '\n' +
 				"bx: " + std::to_string(bx) + '\n' +
 				"az: " + std::to_string(az) + '\n' +
 				"bz: " + std::to_string(bz) + '\n' +
-				"step: " + std::to_string(step) + "\n\n";
+				"step: " + std::to_string(step) + '\n';
+#endif
 
+
+			U64 am = 0;
 			// Each pixel of the scanned line
 			for (I64 x = ax; x < bx; x++) {
 				// Add the depth step
@@ -262,8 +273,13 @@ double Render3DLayer::render() {
 				if (depth_buffer[x + line_dry] >= depth_steps) {
 					depth_buffer[x + line_dry] = depth_steps;
 					this->render_buffer[x + line_dry] = projected_tri.color;
+					am++;
 				}
 			}
+
+#ifdef DEBUG_TEXT
+			debug_text += "am: " + std::to_string(am) + "\n\n";
+#endif
 		}
 	}
 
