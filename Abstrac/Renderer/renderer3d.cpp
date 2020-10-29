@@ -103,9 +103,9 @@ double Render3DLayer::render() {
 			continue;
 
 		// Avoid high division values later on
-		if (tri.a.z < 0.001 && tri.a.z > -0.001) tri.a.z = 0.001;
-		if (tri.b.z < 0.001 && tri.b.z > -0.001) tri.b.z = 0.001;
-		if (tri.c.z < 0.001 && tri.c.z > -0.001) tri.c.z = 0.001;
+		if (tri.a.z < 0.01 && tri.a.z > -0.01) tri.a.z = 0.01;
+		if (tri.b.z < 0.01 && tri.b.z > -0.01) tri.b.z = 0.01;
+		if (tri.c.z < 0.01 && tri.c.z > -0.01) tri.c.z = 0.01;
 
 		SolidTri original_tri = tri;
 
@@ -221,12 +221,12 @@ double Render3DLayer::render() {
 			Point3& b2 = line_points[3];
 
 			// Map to get the X coordinate of the scanned line
-			I64 ax = remap(line, a1.y, a2.y, a1.x, a2.x);
-			I64 bx = remap(line, b1.y, b2.y, b1.x, b2.x);
+			I64 ax = remap(line, (I64)a1.y, (I64)a2.y, (I64)a1.x, (I64)a2.x);
+			I64 bx = remap(line, (I64)b1.y, (I64)b2.y, (I64)b1.x, (I64)b2.x);
 
 			// Also... depth/z
-			double az = remap(line, a1.y, a2.y, a1.z, a2.z);
-			double bz = remap(line, b1.y, b2.y, b1.z, b2.z);
+			double az = remap(line, (I64)a1.y, (I64)a2.y, a1.z, a2.z);
+			double bz = remap(line, (I64)b1.y, (I64)b2.y, b1.z, b2.z);
 
 			// Swap if ax is greater than bx
 			if (ax > bx) {
@@ -241,9 +241,9 @@ double Render3DLayer::render() {
 			// Calculate depth step in each pixel of the line
 			double step = 0;
 			if (bx - ax != 0)
-				step = (bz - az) / (double)(bx - ax);
+				step = (double)(bz - az) / (double)(bx - ax);
 			double depth_steps = az - step;
-			U32 line_dry = line * this->width;
+			U64 line_dry = line * this->width;
 
 #ifdef DEBUG_TEXT
 			debug_text +=

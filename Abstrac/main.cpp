@@ -18,15 +18,14 @@ int entry(std::vector<sf::String> args) {
 
 	Render3DLayer aa = Render3DLayer(800, 600, 90, 50000, 0.1);
 	Mesh mesh;
-	// mesh.solid_tris.push_back(SolidTri{ Point3{0, 0, 1}, Point3{1, 0, 1}, Point3{0, 1, 1}, 0xFF000000 });
 	mesh.solid_tris = loadFromObj("test.obj");
 	aa.meshes.push_back(mesh);
 	aa.position = Point3{ 0, 0, -30000 };
 
 	std::wcout << "OBJ LOADED! " << mesh.solid_tris.size() << " triangles\n";
 
-	double speed = 0.2;
-	double rot_speed = 4;
+	double speed = 5000;
+	double rot_speed = 33;
 
 	while (window.isOpen()) {
 		double delta = astd::getTime() - prev;
@@ -70,6 +69,8 @@ int entry(std::vector<sf::String> args) {
 		tex.loadFromImage(buf);
 		sf::Sprite sprite(tex);
 
+		debug_text = "XYZ: " + std::to_string(aa.position.x) + ", " + std::to_string(aa.position.y) + ", " + std::to_string(aa.position.z) + '\n' +
+			"YPR: " + std::to_string(aa.rotation.x) + ", " + std::to_string(aa.rotation.y) + ", " + std::to_string(aa.rotation.z) + '\n';
 		text.setString(debug_text);
 		
 		window.draw(sprite);
