@@ -261,6 +261,7 @@ double Render3DLayer::render() {
 			for (I64 x = ax; x < bx; x++) {
 				// Add the depth step
 				depth_steps += step;
+
 				if (x < 0) { // The pixel is to the left of the screen, skip to the X 0
 					depth_steps += step * -x;
 					x = -1;
@@ -268,6 +269,17 @@ double Render3DLayer::render() {
 				}
 				if (x >= this->width) // The pixel is to the right, skip to the next line
 					break;
+
+				if (depth_steps <= this->near_clipping) {
+					if (step <= 0)
+						break;
+					else {
+						double skip = this->near_clipping - depth_steps;
+						depth_steps += skip;
+						x += skip / step;
+						continue;
+					}
+				}
 
 				// If it's in front of the previous pixel's depth, render it
 				if (depth_buffer[x + line_dry] >= depth_steps) {

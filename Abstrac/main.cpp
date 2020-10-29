@@ -19,8 +19,10 @@ int entry(std::vector<sf::String> args) {
 	Render3DLayer aa = Render3DLayer(800, 600, 90, 50000, 0.1);
 	Mesh mesh;
 	mesh.solid_tris = loadFromObj("test.obj");
+	//mesh.solid_tris.push_back(SolidTri{ Point3{-1, 1, 5}, Point3{-1, -1, 5}, Point3{1, 0, 3}, 0xFF00FF00 });
+	//mesh.solid_tris.push_back(SolidTri{ Point3{-1, 0, 3}, Point3{1, 1, 5}, Point3{1, -1, 5}, 0xFFFF0000 });
 	aa.meshes.push_back(mesh);
-	aa.position = Point3{ 0, 0, -30000 };
+	aa.position = Point3{ 0, 0, -35000 };
 
 	std::wcout << "OBJ LOADED! " << mesh.solid_tris.size() << " triangles\n";
 
